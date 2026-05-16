@@ -40,13 +40,13 @@ def search_weather():
         history = []
 
         if os.path.exists("history.json"):
-            with open("history.json", "r") as file:
+            with open(FILE_NAME, "r") as file:
                 history = json.load(file)
 
         history.append(weather_record)  
 
 
-        with open("history.json","w") as file:
+        with open(FILE_NAME,"w") as file:
             json.dump(history,file,indent=4)
 
         print("Data saved to history.json")  
@@ -67,7 +67,7 @@ def view_history():
     for index, record in enumerate(history, start=1):
         print(
             f"{index}. "
-            f"{record['city']} | "
+            f"{record['name']} | "
             f"{record['temperature']}°C | "
             f"{record['weather']}"
         )
@@ -91,11 +91,11 @@ def main():
 
         if choice == "1":
             search_weather()
-        elif choice == 2:
+        elif choice == "2":
             view_history()
-        elif choice == 3:
-            delete_history
-        elif choice == 4:
+        elif choice == "3":
+            delete_history()
+        elif choice == "4":
             break
         else:
             print("Invalid input.")

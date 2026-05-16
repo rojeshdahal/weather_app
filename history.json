@@ -1,8 +1,26 @@
 [
     {
         "name": "Kathmandu",
-        "temperature": 24.12,
-        "humidity": 69,
+        "temperature": 26.12,
+        "humidity": 57,
         "weather": "Thunderstorm"
+    },
+    {
+        "name": "Kathmandu",
+        "temperature": 26.12,
+        "humidity": 57,
+        "weather": "Thunderstorm"
+    },
+    {
+        "name": "Pokhara",
+        "temperature": 26.82,
+        "humidity": 57,
+        "weather": "Clouds"
+    },
+    {
+        "name": "Madi",
+        "temperature": 22.31,
+        "humidity": 96,
+        "weather": "Clouds"
     }
 ]
