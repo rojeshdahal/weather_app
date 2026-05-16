@@ -52,7 +52,56 @@ def search_weather():
         print("Data saved to history.json")  
 
     else: 
-        print("Information not found.")         
+        print("Information not found.")       
+
+def view_history():
+    if not os.path.exists(FILE_NAME):
+        print("History not found.")  
+        return
+    
+    with open(FILE_NAME, "r") as file:
+        history = json.load(file)
+
+    print("Search history")
+
+    for index, record in enumerate(history, start=1):
+        print(
+            f"{index}. "
+            f"{record['city']} | "
+            f"{record['temperature']}°C | "
+            f"{record['weather']}"
+        )
+
+def delete_history():
+    if os.path.exists(FILE_NAME):
+        os.remove(FILE_NAME)
+        print("History deleted..")
+    else:
+        print("History not found") 
+
+def main():
+    while True:
+        print("Enter your choice:")
+        print("1. Search weather")
+        print("2. View history")
+        print("3. Delete history")
+        print("4. Exit")
+
+        choice = input("Enter your choice.")
+
+        if choice == "1":
+            search_weather()
+        elif choice == 2:
+            view_history()
+        elif choice == 3:
+            delete_history
+        elif choice == 4:
+            break
+        else:
+            print("Invalid input.")
+
+
+main()
    
 
 
