@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import datetime
 
 
 API_KEY = "e81e4bee64bc4c022185de5b9af6d536"
@@ -10,49 +11,57 @@ FILE_NAME = "history.json"
 
 def search_weather():
     
-    city_name = input("Enter the city name: ")
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_KEY}&units=metric"
+    try:
 
-    response = requests.get(url)
+        city_name = input("Enter the city name: ")
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_KEY}&units=metric"
 
-    data = response.json()
+        response = requests.get(url)
 
-    # print(data)
-    if response.status_code == 200:
+        data = response.json()
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # print(data)
+        if response.status_code == 200:
 
-        city = data["name"]
-        temperature= data["main"]["temp"]
-        humidity=data["main"]["humidity"]
-        weather=data["weather"][0]["main"]
+            city = data["name"]
+            temperature= data["main"]["temp"]
+            humidity=data["main"]["humidity"]
+            weather=data["weather"][0]["main"]
 
-        print(f"City: {city}")
-        print(f"Temperature: {temperature}")
-        print(f"Humidity: {humidity}")
-        print(f"Weather: {weather}")
+            print(f"City: {city}")
+            print(f"Temperature: {temperature}")
+            print(f"Humidity: {humidity}")
+            print(f"Weather: {weather}")
 
-        weather_record = {
-            "name":city,
-            "temperature": temperature,
-            "humidity": humidity,
-            "weather": weather
-        }
+            weather_record = {
+                "name":city,
+                "temperature": temperature,
+                "humidity": humidity,
+                "weather": weather,
+                "date_time": current_time
+            }
 
-        history = []
+            history = []
 
-        if os.path.exists("history.json"):
-            with open(FILE_NAME, "r") as file:
-                history = json.load(file)
+            if os.path.exists(FILE_NAME):
+                with open(FILE_NAME, "r") as file:
+                    history = json.load(file)
 
-        history.append(weather_record)  
+            history.append(weather_record)  
 
 
-        with open(FILE_NAME,"w") as file:
-            json.dump(history,file,indent=4)
+            with open(FILE_NAME,"w") as file:
+                json.dump(history,file,indent=4)
 
-        print("Data saved to history.json")  
+            print("Data saved to history.json")  
 
-    else: 
-        print("Information not found.")       
+        else: 
+            print("Information not found.")     
+    except KeyError:
+        print("Unexpected API response") 
+
+    except requests.exceptions.ConnectionError:
+        print("No internet connection.")             
 
 def view_history():
     if not os.path.exists(FILE_NAME):
@@ -79,13 +88,44 @@ def delete_history():
     else:
         print("History not found") 
 
+def current_location():
+
+    try:
+        resp = requests.get("https://ipapi.co/json").json()
+        lat = resp['latitude']
+        lon = resp['longitude']
+
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_KEY}&units=metric"
+        response = requests.get(url)
+
+        data = response.json()
+
+        city = data["name"]
+        temperature= data["main"]["temp"]
+        humidity=data["main"]["humidity"]
+        weather=data["weather"][0]["main"]
+
+        print(f"City: {city}")
+        print(f"Temperature: {temperature}")
+        print(f"Humidity: {humidity}")
+        print(f"Weather: {weather}")
+
+    except requests.exceptions.ConnectionError:
+        print("No internet connection.")
+
+    except KeyError:
+        print("Unexpected API response.")    
+
 def main():
+
     while True:
         print("Enter your choice:")
         print("1. Search weather")
         print("2. View history")
         print("3. Delete history")
-        print("4. Exit")
+        print("4. Based on current location")
+        print("5. Exit")
+        
 
         choice = input("Enter your choice.")
 
@@ -96,6 +136,8 @@ def main():
         elif choice == "3":
             delete_history()
         elif choice == "4":
+            current_location()
+        elif choice == "5":
             break
         else:
             print("Invalid input.")

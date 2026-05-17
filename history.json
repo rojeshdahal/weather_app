@@ -22,5 +22,12 @@
         "temperature": 22.31,
         "humidity": 96,
         "weather": "Clouds"
+    },
+    {
+        "name": "Biratnagar",
+        "temperature": 27.73,
+        "humidity": 68,
+        "weather": "Clear",
+        "date_time": "2026-05-16 21:17:01"
     }
 ]
